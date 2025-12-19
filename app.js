@@ -8,12 +8,13 @@ var loginRoute = require("./Routes/loginRoute");
 var dbRoute = require("./Routes/dbRoute");
 var cors = require("cors");
 var dataBase = require("./data");
+const PORT = process.env.PORT || 9000;
 
 var app = express();
 
 app.use(
   cors({
-    origin: "https://frontendsignin.vercel.app/",
+    origin: "https://frontendsignin.vercel.app",
     methods: ["GET", "POST"],
   })
 );
@@ -33,7 +34,7 @@ const fun = async () => {
   try {
     await dataBase();
     console.log("connected to DataBase");
-    app.listen(9000, "0.0.0.0", function () {
+    app.listen(PORT, "0.0.0.0", function () {
       console.log("Server started at 9000 port");
       console.log("testing");
     });
