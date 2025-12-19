@@ -34,10 +34,10 @@ const fun = async () => {
   try {
     await dataBase();
     console.log("connected to DataBase");
-    app.listen(PORT, "0.0.0.0", function () {
-      console.log("Server started at 9000 port");
-      console.log("testing");
-    });
+    // app.listen(PORT, "0.0.0.0", function () {
+    //   console.log("Server started at 9000 port");
+    //   console.log("testing");
+    // });
   } catch (err) {
     console.log(err);
   }
