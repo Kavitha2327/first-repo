@@ -1,5 +1,5 @@
 var express = require("express");
-const userData = require("../data").default;
+// const userData = require("../data").default;
 const nodemailer = require("nodemailer");
 const ExcelJS = require("exceljs");
 const multer = require("multer");
@@ -16,47 +16,47 @@ const postData = async (req, res) => {
       Email: email,
     });
 
-    const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet("user");
+    // const workbook = new ExcelJS.Workbook();
+    // const sheet = workbook.addWorksheet("user");
 
-    // sheet.columns = [
-    //   { header: "Name", key: "Name", width: 20 },
-    //   { header: "Email", key: "Email", width: 60 },
-    //   // { header: "Password", key: "Password", width: 20 },
-    // ];
-    sheet.addRow(["Name", "Email"]);
-    sheet.addRow([data.Name, data.Email]);
+    // // sheet.columns = [
+    // //   { header: "Name", key: "Name", width: 20 },
+    // //   { header: "Email", key: "Email", width: 60 },
+    // //   // { header: "Password", key: "Password", width: 20 },
+    // // ];
+    // sheet.addRow(["Name", "Email"]);
+    // sheet.addRow([data.Name, data.Email]);
 
-    const filepath = "./userData.xlsx";
-    await workbook.xlsx.writeFile(filepath);
+    // const filepath = "./userData.xlsx";
+    // await workbook.xlsx.writeFile(filepath);
 
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: "n130141@rguktn.ac.in",
-        pass: "hhhp hoqi efxu senh",
-      },
-    });
+    // let transporter = nodemailer.createTransport({
+    //   service: "gmail",
+    //   auth: {
+    //     user: "n130141@rguktn.ac.in",
+    //     pass: "hhhp hoqi efxu senh",
+    //   },
+    // });
 
-    let mail = {
-      from: '"Kavitha" <n130141@rguktn.ac.in>',
-      to: email,
-      subject: "Sign up",
-      html: `
-      <h3>Hello ${data.Name},</h3>
-      <p>You have successfully created your account.</p>
-      <br/>
-      <p>Thank you,<br/>Kavitha</p>
-      `,
-      attachments: [
-        {
-          filename: "userData.xlsx",
-          path: filepath,
-        },
-      ],
-    };
+    // let mail = {
+    //   from: '"Kavitha" <n130141@rguktn.ac.in>',
+    //   to: email,
+    //   subject: "Sign up",
+    //   html: `
+    //   <h3>Hello ${data.Name},</h3>
+    //   <p>You have successfully created your account.</p>
+    //   <br/>
+    //   <p>Thank you,<br/>Kavitha</p>
+    //   `,
+    //   attachments: [
+    //     {
+    //       filename: "userData.xlsx",
+    //       path: filepath,
+    //     },
+    //   ],
+    // };
 
-    await transporter.sendMail(mail);
+    // await transporter.sendMail(mail);
     console.log("data sent");
     res.status(201).send(data);
   } catch (err) {
@@ -73,12 +73,12 @@ const login = async (req, res) => {
       return res.status(401).send("Invalid Credentials");
     }
 
-    const token = jwt.sign(
-      { userId: user._id, email: user.Email }, // data you want inside token
-      "MY_SECRET_KEY", // secret key
-      { expiresIn: "1h" } // token expiry time
-    );
-    console.log("Generated Token:", token);
+    // const token = jwt.sign(
+    //   { userId: user._id, email: user.Email }, // data you want inside token
+    //   "MY_SECRET_KEY", // secret key
+    //   { expiresIn: "1h" } // token expiry time
+    // );
+    // console.log("Generated Token:", token);
 
     // let transporter = nodemailer.createTransport({
     //   service: "gmail",
@@ -117,7 +117,7 @@ const login = async (req, res) => {
     //       </table>`,
     // };
     // await transporter.sendMail(mail);
-    return res.status(200).json({ message: "Login successful", token: token });
+    return res.status(200).json({ message: "Login successful" });
   } catch (err) {
     return res.status(401).send(err);
   }
