@@ -5,6 +5,7 @@ const ExcelJS = require("exceljs");
 const multer = require("multer");
 const { user, userImage } = require("../Models/dbModel");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const postData = async (req, res) => {
   try {
@@ -19,11 +20,11 @@ const postData = async (req, res) => {
     // const workbook = new ExcelJS.Workbook();
     // const sheet = workbook.addWorksheet("user");
 
-    // // sheet.columns = [
-    // //   { header: "Name", key: "Name", width: 20 },
-    // //   { header: "Email", key: "Email", width: 60 },
-    // //   // { header: "Password", key: "Password", width: 20 },
-    // // ];
+    // sheet.columns = [
+    //   { header: "Name", key: "Name", width: 20 },
+    //   { header: "Email", key: "Email", width: 60 },
+    //   // { header: "Password", key: "Password", width: 20 },
+    // ];
     // sheet.addRow(["Name", "Email"]);
     // sheet.addRow([data.Name, data.Email]);
 
@@ -68,58 +69,39 @@ const postData = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { userName, password } = req.body;
+
     const Login = await user.findOne({ Name: userName, Password: password });
     if (!Login) {
       return res.status(401).send("Invalid Credentials");
     }
 
-    // const token = jwt.sign(
-    //   { userId: user._id, email: user.Email }, // data you want inside token
-    //   "MY_SECRET_KEY", // secret key
-    //   { expiresIn: "1h" } // token expiry time
-    // );
-    // console.log("Generated Token:", token);
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-    // let transporter = nodemailer.createTransport({
-    //   service: "gmail",
-    //   auth: {
-    //     user: "n130141@rguktn.ac.in",
-    //     pass: "hhhp hoqi efxu senh",
-    //   },
-    // });
-    // let mail = {
-    //   from: '"Kavitha" <n130141@rguktn.ac.in>',
-    //   to: Login.Email,
-    //   subject: "Logged in",
-    //   html: `<h2>Hello ${Login.Name}</h2>
-    //       <table
-    //         border="1"
-    //         cellpadding="8"
-    //         cellSpacing="0"
-    //         style="border-collapse: collapse;"
-    //       >
-    //         <tr>
-    //           <th>Field</th>
-    //           <th>Value</th>
-    //         </tr>
-    //         <tr>
-    //           <td>Name</td>
-    //           <td>${Login.Name}</td>
-    //         </tr>
-    //         <tr>
-    //           <td>Email</td>
-    //           <td>${Login.Email}</td>
-    //         </tr>
-    //         <tr>
-    //           <td>Password</td>
-    //           <td>${Login.Password}</td>
-    //         </tr>
-    //       </table>`,
-    // };
-    // await transporter.sendMail(mail);
-    return res.status(200).json({ message: "Login successful" });
+    const mail = {
+      from: `"Kavitha" <${process.env.EMAIL}>`,
+      to: Login.Email,
+      subject: "Login Alert",
+      html: `<h3>Hello ${Login.Name}</h3>
+             <p>You logged in successfully.</p>`,
+    };
+
+    // Respond immediately
+    res.status(200).json({ message: "Login successful" });
+
+    // Fire-and-forget mail
+    transporter
+      .sendMail(mail)
+      .then(() => console.log("Login mail sent"))
+      .catch((err) => console.error("Mail error:", err));
   } catch (err) {
-    return res.status(401).send(err);
+    console.error(err);
+    return res.status(500).send("Server error");
   }
 };
 
