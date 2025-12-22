@@ -1,5 +1,5 @@
 var createError = require("http-errors");
-var express = require("express");
+const express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
@@ -8,9 +8,12 @@ var loginRoute = require("./Routes/loginRoute");
 var dbRoute = require("./Routes/dbRoute");
 var cors = require("cors");
 var dataBase = require("./data");
+const { startCronJobs } = require("./Controllers/cronController");
 const PORT = process.env.PORT || 9000;
 
-var app = express();
+const app = express();
+
+startCronJobs();
 
 app.use(
   cors({
@@ -34,10 +37,6 @@ const fun = async () => {
   try {
     await dataBase();
     console.log("connected to DataBase");
-    // app.listen(PORT, "0.0.0.0", function () {
-    //   console.log("Server started at 9000 port");
-    //   console.log("testing");
-    // });
   } catch (err) {
     console.log(err);
   }
